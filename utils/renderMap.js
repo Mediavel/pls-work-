@@ -1,5 +1,3 @@
-let mapLoaded = false;
-let map = "r";
 let waterArray = [
    "sprites/water/0.png",
    "sprites/water/1.png",
@@ -217,34 +215,48 @@ function optimizeCanvas() {
    mapLoaded = true;
 }
 function buildMap() {
-   if (map == "r") {
+   if (map == 0) {
       gameMap.values = [];
+      side1 = [];
+      side2 = [];
       mapLoaded = false;
       generateRandomMap();
       firstRenderOfMap();
+      makeCollisionBoxesOnMap();
       setTimeout(optimizeCanvas, 250);
-      console.log(gameMap.values);
-   } else if (map == "1") {
+   } else if (map == 1) {
       gameMap.values = mapOne.values;
+      side1 = [];
+      side2 = [];
       mapLoaded = false;
       firstRenderOfMap();
       setTimeout(optimizeCanvas, 250);
       console.log(gameMap.values);
-   } else if (map == "2") {
+   } else if (map == 2) {
       gameMap.values = mapTwo.values;
+      side1 = [];
+      side2 = [];
       mapLoaded = false;
       firstRenderOfMap();
       setTimeout(optimizeCanvas, 250);
       console.log(gameMap.values);
-   } else if (map == "3") {
+   } else if (map == 3) {
       gameMap.values = mapThree.values;
+      side1 = [];
+      side2 = [];
       mapLoaded = false;
       firstRenderOfMap();
       setTimeout(optimizeCanvas, 250);
       console.log(gameMap.values);
    } else {
-      console.warn("Not a valid map");
-      console.log(gameMap.values);
+      gameMap.values = [];
+      side1 = [];
+      side2 = [];
+      mapLoaded = false;
+      generateMapOfCustomSeed(map);
+      firstRenderOfMap();
+      makeCollisionBoxesOnMap();
+      setTimeout(optimizeCanvas, 250);
    }
 }
 function renderMap() {

@@ -1,13 +1,19 @@
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
-const CANVAS_WIDTH = (canvas.width = 2000);
-const CANVAS_HEIGHT = (canvas.height = 1100);
+
+const CANVAS_WIDTH = (canvas.width = 1920);
+const CANVAS_HEIGHT = (canvas.height = 1080);
+
 const TILE_SIZE = 20.5;
 
 let side1 = [];
 let side2 = [];
 let side1Unit = null;
 let side2Unit = null;
+
+let mapLoaded = false;
+let map = 0.6845532763878266;
+let mapsize = 5086;
 
 let dragData = {
    active: false,
@@ -17,47 +23,14 @@ let dragData = {
    endy: 0,
 };
 
-// side1.push(
-//   new Infantry(
-//     ctx,
-//     (color = "red"),
-//     (positionx = getRandomInt(100, 1000)),
-//     (positiony = getRandomInt(100, 1000))
-//   )
-// );
-// side1.push(
-//   new Infantry(
-//     ctx,
-//     (color = "red"),
-//     (positionx = getRandomInt(100, 1000)),
-//     (positiony = getRandomInt(100, 1000))
-//   )
-// );
-// side1.push(
-//   new Infantry(
-//     ctx,
-//     (color = "red"),
-//     (positionx = getRandomInt(100, 1000)),
-//     (positiony = getRandomInt(100, 1000))
-//   )
-// );
-// side1.push(
-//   new Infantry(
-//     ctx,
-//     (color = "red"),
-//     (positionx = getRandomInt(100, 1000)),
-//     (positiony = getRandomInt(100, 1000))
-//   )
-// );
-
 buildMap();
 
 function animate() {
    ctx.fillStyle = "black";
-   //ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-   //ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
    //draw terrain
    renderMap();
+
+   handleHitboxes();
 
    //render all units for both sides
    side1.map((unit) => {
@@ -105,23 +78,7 @@ document.addEventListener("keypress", (event) => {
          )
       );
    }
+   if (event.key == "1") renderHitBoxes = true;
+   if (event.key == "2") renderHitBoxes = false;
+   if (event.key == " ") buildMap();
 });
-// document.addEventListener("keypress", (event) => {
-//   if (event.key == "1") {
-//     customMap = false;
-//     randomMap = true;
-//   } else if (event.key == "2") {
-//     customMap = true;
-//     randomMap = false;
-//   }
-// });
-
-// function getMap() {
-//   if (randomMap == true && customMap == false) {
-//     buildRandomMap();
-//     renderRandomMap();
-//   } else if (customMap == true && randomMap == false) {
-//     console.log("YOU HAVE PICKED THE CUSTOM MAP");
-//   }
-// }
-// getMap();
