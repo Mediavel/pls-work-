@@ -68,6 +68,7 @@ function handleHitboxes() {
             })
          ) {
             console.log("they are touching water");
+            unit.speed = 0.1;
          }
       });
    });
