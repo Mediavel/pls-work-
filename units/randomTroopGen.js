@@ -47,3 +47,55 @@
 //   }
 // }
 // pushTroopsToMap();
+
+// this.ctx.fillStyle = this.color;
+//       ctx.fillRect(this.positionx, this.positiony, this.width, this.height);
+//       drawLineDiagonalRight(
+//          this.width,
+//          this.height,
+//          this.positionx,
+//          this.positiony,
+//          this.ctx
+//       );
+//       drawLineDiagonalLeft(
+//          this.width,
+//          this.height,
+//          this.positionx,
+//          this.positiony,
+//          this.ctx
+//       );
+//       if (this.orientation === "north") {
+//          drawHorizontalLine(
+//             this.width,
+//             this.positionx,
+//             this.positiony - 3,
+//             ctx
+//          );
+//       } else if (this.orientation === "south") {
+//          drawHorizontalLine(
+//             this.width,
+//             this.positionx,
+//             this.positiony + this.height + 3,
+//             ctx
+//          );
+//       } else if (this.orientation === "east") {
+//          drawVerticalLine(
+//             this.height,
+//             this.positionx + this.width + 3,
+//             this.positiony,
+//             ctx
+//          );
+//       } else {
+//          drawVerticalLine(this.height, this.positionx - 3, this.positiony, ctx);
+//       }
+
+//       if (this.selected === true) {
+//          outlineUnit(
+//             this.width,
+//             this.height,
+//             this.positionx,
+//             this.positiony,
+//             this.ctx
+//          );
+//       }
+//       drawDestination(this.destination, this.selected, this.ctx);

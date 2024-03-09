@@ -3,17 +3,21 @@ let gameMap = {
    id: "curectMap",
    values: [],
 };
+//generats a random map using perlin noise based on a random seed
+//every time
 function generateRandomMap() {
    const TILE_SIZE = 20;
 
-   //noise.seed(Math.random());
-   const seed = Math.random();
+   //setting a seed randomly
+   let seed = Math.random();
    noise.seed(seed);
-   //noise.seed(45);
 
+   //getting the total about of tiles for the height and width of the map
+   //based on how many would fit for the given tile size
    const numTilesX = Math.ceil(canvas.width / TILE_SIZE);
    const numTilesY = Math.ceil(canvas.height / TILE_SIZE);
 
+   //the heights wich we generate different types of terrian
    var creeks = 0.0001;
    var plains = 0.35;
    var forests = 0.55;
@@ -21,6 +25,9 @@ function generateRandomMap() {
    var moutainForests = 0.725;
    var lakes = 0.85;
 
+   //looping adding terrian tilesin the correct location based on the
+   //width and height also based on height of the perlin noise
+   //also adding a little more randomness to make it look better
    for (var y = 0; y < numTilesY; y++) {
       for (var x = 0; x < numTilesX; x++) {
          // Generate Perlin noise value for the tile
@@ -56,15 +63,20 @@ function generateRandomMap() {
    console.log("Seed:", seed);
    //console.log(gameMap.values);
 }
-function generateMapOfCustomSeed() {
+//generats a random map based using perlin noise based on a set seed
+//picked by the user every time
+function generateMapOfCustomSeed(seed) {
    const TILE_SIZE = 20;
 
-   //noise.seed(Math.random());
-   noise.seed(map);
+   //setting seed that the user picked
+   noise.seed(seed);
 
+   //getting the total about of tiles for the height and width of the map
+   //based on how many would fit for the given tile size
    const numTilesX = Math.ceil(canvas.width / TILE_SIZE);
    const numTilesY = Math.ceil(canvas.height / TILE_SIZE);
 
+   //the heights wich we generate different types of terrian
    var creeks = 0.0001;
    var plains = 0.35;
    var forests = 0.55;
@@ -72,6 +84,9 @@ function generateMapOfCustomSeed() {
    var moutainForests = 0.725;
    var lakes = 0.85;
 
+   //looping adding terrian tilesin the correct location based on the
+   //width and height also based on height of the perlin noise
+   //also adding a little more randomness to make it look better
    for (var y = 0; y < numTilesY; y++) {
       for (var x = 0; x < numTilesX; x++) {
          // Generate Perlin noise value for the tile
@@ -104,9 +119,12 @@ function generateMapOfCustomSeed() {
          }
       }
    }
-   console.log("Seed:", map);
+   console.log("Seed:", seed);
    //console.log(gameMap.values);
 }
+//this get is a handy funtion written by chat gpt
+//that get a random number between min and max
+//i use this everywhere for randomization
 function getRandomInt(min, max) {
    return Math.floor(Math.random() * (max - min) + min);
 }

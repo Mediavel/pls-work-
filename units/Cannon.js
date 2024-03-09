@@ -1,20 +1,20 @@
-class Infantry {
+class Cannon {
    constructor(ctx, color, positionx, positiony) {
-      this.unitType = "Infantry";
+      this.unitType = "Cannon";
       this.height = 15;
       this.width = 30;
       this.strength = 1;
-      this.health = 1000;
+      this.health = 10;
       this.moral = 500;
       this.cover = 0;
       this.baseCover = 0;
-      this.accuracy = 50;
-      this.baseAccuracy = 50;
-      this.range = 100;
-      this.baseRange = 100;
-      this.canMelee = true;
-      this.speed = 1;
-      this.baseSpeed = 1;
+      this.accuracy = 40;
+      this.baseAccuracy = 40;
+      this.range = 200;
+      this.baseRange = 200;
+      this.canMelee = false;
+      this.speed = 0.6;
+      this.baseSpeed = 0.6;
       this.selected = false;
       this.destination = {
          isMoving: false,
@@ -32,17 +32,10 @@ class Infantry {
    draw() {
       this.ctx.fillStyle = this.color;
       ctx.fillRect(this.positionx, this.positiony, this.width, this.height);
-      drawLineDiagonalRight(
-         this.width,
+
+      drawVerticalLine(
          this.height,
-         this.positionx,
-         this.positiony,
-         this.ctx
-      );
-      drawLineDiagonalLeft(
-         this.width,
-         this.height,
-         this.positionx,
+         this.positionx + this.height - 1,
          this.positiony,
          this.ctx
       );
@@ -92,8 +85,9 @@ class Infantry {
    }
 
    animate() {
-      if (this.destination.isMoving)
+      if (this.destination.isMoving) {
          this.moveTo(this.destination.x, this.destination.y);
+      }
    }
 
    moveTo(x, y) {

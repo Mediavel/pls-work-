@@ -1,15 +1,15 @@
-class Infantry {
+class General {
    constructor(ctx, color, positionx, positiony) {
-      this.unitType = "Infantry";
+      this.unitType = "General";
       this.height = 15;
       this.width = 30;
       this.strength = 1;
-      this.health = 1000;
+      this.health = 20;
       this.moral = 500;
       this.cover = 0;
       this.baseCover = 0;
-      this.accuracy = 50;
-      this.baseAccuracy = 50;
+      this.accuracy = 65;
+      this.baseAccuracy = 65;
       this.range = 100;
       this.baseRange = 100;
       this.canMelee = true;
@@ -32,20 +32,6 @@ class Infantry {
    draw() {
       this.ctx.fillStyle = this.color;
       ctx.fillRect(this.positionx, this.positiony, this.width, this.height);
-      drawLineDiagonalRight(
-         this.width,
-         this.height,
-         this.positionx,
-         this.positiony,
-         this.ctx
-      );
-      drawLineDiagonalLeft(
-         this.width,
-         this.height,
-         this.positionx,
-         this.positiony,
-         this.ctx
-      );
       if (this.orientation === "north") {
          drawHorizontalLine(
             this.width,
@@ -70,7 +56,6 @@ class Infantry {
       } else {
          drawVerticalLine(this.height, this.positionx - 3, this.positiony, ctx);
       }
-
       if (this.selected === true) {
          outlineUnit(
             this.width,

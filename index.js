@@ -12,9 +12,12 @@ let side1Unit = null;
 let side2Unit = null;
 
 let mapLoaded = false;
-let map = 0.6845532763878266;
+//map/seed
+let map = 0;
 let mapsize = 5086;
-
+let renderHitBoxes = false;
+let renderStats = false;
+//0.5256069194573787;
 let dragData = {
    active: false,
    startx: 0,
@@ -27,20 +30,20 @@ buildMap();
 
 function animate() {
    ctx.fillStyle = "black";
-   //draw terrain
-   renderMap();
 
-   handleHitboxes();
-
-   //render all units for both sides
+   if (renderHitBoxes) renderBoxes(); //render hitboxes
+   else if (!renderHitBoxes) renderMap(); //or render map art
    side1.map((unit) => {
       unit.draw();
       unit.animate();
+      if (renderStats) unit.drawStats();
    });
    side2.map((unit) => {
       unit.draw();
       unit.animate();
+      if (renderStats) unit.drawStats();
    });
+   handleHitBoxes();
 
    requestAnimationFrame(animate);
 }
@@ -64,9 +67,9 @@ document.addEventListener("mouseup", () => {
    handleMouseUp(dragData, side1);
 });
 
-//temp code from raice for testing
+//keyboard actions
 document.addEventListener("keypress", (event) => {
-   if (event.key == "Enter") {
+   if (event.key == "1") {
       let coordsX = getRandomInt(100, 1000);
       let coordsY = getRandomInt(100, 1000);
       side1.push(
@@ -77,8 +80,43 @@ document.addEventListener("keypress", (event) => {
             (positiony = coordsY)
          )
       );
-   }
-   if (event.key == "1") renderHitBoxes = true;
-   if (event.key == "2") renderHitBoxes = false;
-   if (event.key == " ") buildMap();
+   } else if (event.key == "2") {
+      let coordsX = getRandomInt(100, 1000);
+      let coordsY = getRandomInt(100, 1000);
+      side1.push(
+         new Calvary(
+            ctx,
+            (color = "red"),
+            (positionx = coordsX),
+            (positiony = coordsY)
+         )
+      );
+   } else if (event.key == "3") {
+      let coordsX = getRandomInt(100, 1000);
+      let coordsY = getRandomInt(100, 1000);
+      side1.push(
+         new Cannon(
+            ctx,
+            (color = "red"),
+            (positionx = coordsX),
+            (positiony = coordsY)
+         )
+      );
+   } else if (event.key == "4") {
+      let coordsX = getRandomInt(100, 1000);
+      let coordsY = getRandomInt(100, 1000);
+      side1.push(
+         new General(
+            ctx,
+            (color = "red"),
+            (positionx = coordsX),
+            (positiony = coordsY)
+         )
+      );
+   } else if (event.key == "h" && renderHitBoxes == true)
+      renderHitBoxes = false;
+   else if (event.key == "h" && renderHitBoxes == false) renderHitBoxes = true;
+   else if (event.key == "r" && renderStats == true) renderStats = false;
+   else if (event.key == "r" && renderStats == false) renderStats = true;
+   else if (event.key == " ") buildMap();
 });

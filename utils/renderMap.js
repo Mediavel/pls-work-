@@ -54,6 +54,8 @@ let moutainArray = [
    "sprites/highground/8.png",
    "sprites/highground/9.png",
 ];
+
+//places art
 function firstRenderOfMap() {
    let x = 0;
    let y = 0;
@@ -61,6 +63,7 @@ function firstRenderOfMap() {
    for (let i = 0; i + 1 <= gameMap.values.length; i++) {
       //set terrain images
       switch (gameMap.values[i]) {
+         //places grass art on plains biome
          case "gG": //green grass
             direction = getDirection();
             let plain = getRandomInt(0, 750);
@@ -75,9 +78,9 @@ function firstRenderOfMap() {
                layImgStrict(plainArray[0], x, y, direction);
                layImg(plainArray[plain], x, y);
             }
-
             break;
 
+         //places forest art on forest biome
          case "fG": // forest green
             direction = getDirection();
             let forest = getRandomInt(0, 100);
@@ -93,9 +96,9 @@ function firstRenderOfMap() {
                layImgStrict(forestArray[0], x, y, direction);
                layImg(forestArray[forest], x, y);
             }
-
             break;
 
+         //places mouitain art on moutain biome
          case "hG": // hills gray
             direction = getDirection();
             let moutain = getRandomInt(0, 40);
@@ -108,9 +111,9 @@ function firstRenderOfMap() {
                moutain = getRandomInt(3, 8);
                layImg(moutainArray[moutain], x, y);
             }
-
             break;
 
+         //places water art on water biome
          case "wB": //water blue
             direction = getDirection();
             let water = getRandomInt(0, 100);
@@ -133,6 +136,7 @@ function firstRenderOfMap() {
          y = y + TILE_SIZE;
       }
    }
+   //places a image with a random rotation
    function layImg(imageSrc, x, y) {
       let maxAngleInDegrees = 360;
       let minAngleInDegrees = 0;
@@ -157,6 +161,7 @@ function firstRenderOfMap() {
          ctx.restore(); // Restore the canvas state
       };
    }
+   //places a image with a rotation of NESW
    function layImgStrict(imageSrc, x, y, direction) {
       let angle = 0;
       switch (direction) {
@@ -194,6 +199,7 @@ function firstRenderOfMap() {
          ctx.restore(); // Restore the canvas state
       };
    }
+   //get a set direction for layImgStrict of NESW
    function getDirection(d) {
       d = getRandomInt(1, 5); // Generate a random direction
       if (d === 1) {
@@ -208,58 +214,9 @@ function firstRenderOfMap() {
       return d;
    }
 }
-function optimizeCanvas() {
-   currentMap = canvas.toDataURL();
-   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-   console.log("optimized");
-   mapLoaded = true;
-}
-function buildMap() {
-   if (map == 0) {
-      gameMap.values = [];
-      side1 = [];
-      side2 = [];
-      mapLoaded = false;
-      generateRandomMap();
-      firstRenderOfMap();
-      makeCollisionBoxesOnMap();
-      setTimeout(optimizeCanvas, 250);
-   } else if (map == 1) {
-      gameMap.values = mapOne.values;
-      side1 = [];
-      side2 = [];
-      mapLoaded = false;
-      firstRenderOfMap();
-      setTimeout(optimizeCanvas, 250);
-      console.log(gameMap.values);
-   } else if (map == 2) {
-      gameMap.values = mapTwo.values;
-      side1 = [];
-      side2 = [];
-      mapLoaded = false;
-      firstRenderOfMap();
-      setTimeout(optimizeCanvas, 250);
-      console.log(gameMap.values);
-   } else if (map == 3) {
-      gameMap.values = mapThree.values;
-      side1 = [];
-      side2 = [];
-      mapLoaded = false;
-      firstRenderOfMap();
-      setTimeout(optimizeCanvas, 250);
-      console.log(gameMap.values);
-   } else {
-      gameMap.values = [];
-      side1 = [];
-      side2 = [];
-      mapLoaded = false;
-      generateMapOfCustomSeed(map);
-      firstRenderOfMap();
-      makeCollisionBoxesOnMap();
-      setTimeout(optimizeCanvas, 250);
-   }
-}
+//renders map art on canvas every game loop
 function renderMap() {
+   // if the canvas is optimized render the map as one big image
    if (mapLoaded == true) {
       let map = new Image();
       map.onload = () => {
@@ -267,4 +224,102 @@ function renderMap() {
       };
       map.src = currentMap;
    }
+}
+//renders hitboxes on canvas ever game loop
+function renderBoxes() {
+   waterBoxes.forEach((bound) => {
+      bound.draw();
+   });
+   forestBoxes.forEach((bound) => {
+      bound.draw();
+   });
+   moutainBoxes.forEach((bound) => {
+      bound.draw();
+   });
+   plainsBoxes.forEach((bound) => {
+      bound.draw();
+   });
+}
+
+//takes the thousands of little images when first rendering map and
+//making them all into one image for renderMap()
+function optimizeCanvas() {
+   //setting everything on the canvas to a single image
+   currentMap = canvas.toDataURL();
+   //clears canvas
+   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+   console.log("optimized");
+   //allows rendering of the whole map image to begin
+   mapLoaded = true;
+}
+//resets all values for every new build of a map
+function resetValues() {
+   gameMap.values = [];
+   side1 = [];
+   side2 = [];
+   mapLoaded = false;
+   renderHitBoxes = false;
+}
+//if the map you want has no values it instead generates a map based on
+//that maps seed if the map you have has values it will use those
+function savedMaps() {
+   if (map == 0) gameMap.values = [];
+   else if (map == 1 && mapOne.values.length != 0) {
+      gameMap.values = mapOne.values;
+   } else if (map == 1 && mapOne.values.length == 0) {
+      generateMapOfCustomSeed(mapOne.seed);
+   } else if (map == 2 && mapTwo.values.length != 0) {
+      gameMap.values = mapTwo.values;
+   } else if (map == 2 && mapTwo.values.length == 0) {
+      generateMapOfCustomSeed(mapTwo.seed);
+   } else if (map == 3 && mapThree.values.length != 0) {
+      gameMap.values = mapThree.values;
+   } else if (map == 3 && mapThree.values.length == 0) {
+      generateMapOfCustomSeed(mapThree.seed);
+   } else {
+      gameMap.values = [];
+   }
+}
+//calls every function in the right order to build a map based on the map number'
+//(0 = random map)(anyknown map number is = that map)(and not known map number is = that seed)
+function buildMap() {
+   if (map == 0) {
+      resetValues();
+      generateRandomMap();
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   } else if (map == 1) {
+      resetValues();
+      savedMaps();
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   } else if (map == 2) {
+      resetValues();
+      savedMaps();
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   } else if (map == 3) {
+      resetValues();
+      savedMaps();
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   } else {
+      resetValues();
+      generateMapOfCustomSeed(map);
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   }
+}
+//draws a circle with set arguments
+function drawCircle(ctx, x, y, radius) {
+   ctx.beginPath();
+   ctx.arc(x, y, radius, 0, 2 * Math.PI);
+   ctx.strokeStyle = "black"; // Set the outline color to black
+   ctx.stroke(); // Draw the outline
+   ctx.closePath();
 }
