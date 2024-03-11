@@ -12,12 +12,12 @@ let side1Unit = null;
 let side2Unit = null;
 
 let mapLoaded = false;
-//map/seed
+//map/seed //0.5256069194573787
 let map = 0;
 let mapsize = 5086;
 let renderHitBoxes = false;
 let renderStats = false;
-//0.5256069194573787;
+let renderVisibleStats = false;
 let dragData = {
    active: false,
    startx: 0,
@@ -36,12 +36,13 @@ function animate() {
    side1.map((unit) => {
       unit.draw();
       unit.animate();
-      if (renderStats) unit.drawStats();
+      if (renderVisibleStats) unit.drawStats();
+      logStats(unit);
    });
    side2.map((unit) => {
       unit.draw();
       unit.animate();
-      if (renderStats) unit.drawStats();
+      if (renderVisibleStats) unit.drawStats();
    });
    handleHitBoxes();
 
@@ -49,6 +50,41 @@ function animate() {
 }
 animate();
 
+//calls every function in the right order to build a map based on the map number'
+//(0 = random map)(anyknown map number is = that map)(and not known map number is = that seed)
+function buildMap() {
+   if (map == 0) {
+      resetValues();
+      generateRandomMap();
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   } else if (map == 1) {
+      resetValues();
+      savedMaps();
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   } else if (map == 2) {
+      resetValues();
+      savedMaps();
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   } else if (map == 3) {
+      resetValues();
+      savedMaps();
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   } else {
+      resetValues();
+      generateMapOfCustomSeed(map);
+      placeCollisions();
+      firstRenderOfMap();
+      setTimeout(optimizeCanvas, 250);
+   }
+}
 canvas.addEventListener("mousedown", (event) =>
    handleMousedown(event, dragData)
 );
@@ -116,7 +152,17 @@ document.addEventListener("keypress", (event) => {
    } else if (event.key == "h" && renderHitBoxes == true)
       renderHitBoxes = false;
    else if (event.key == "h" && renderHitBoxes == false) renderHitBoxes = true;
-   else if (event.key == "r" && renderStats == true) renderStats = false;
-   else if (event.key == "r" && renderStats == false) renderStats = true;
+   else if (event.key == "r" && renderVisibleStats == true)
+      renderVisibleStats = false;
+   else if (event.key == "r" && renderVisibleStats == false)
+      renderVisibleStats = true;
+   else if (event.key == "c" && renderStats == true) renderStats = false;
+   else if (event.key == "c" && renderStats == false) renderStats = true;
+   else if (event.key == "=") findGoodSeeds(0, 175, 1000, 5000, 100, 750, 100);
+   else if (event.key == "-") displayFoundSeeds();
    else if (event.key == " ") buildMap();
 });
+//findGoodSeeds(0, 175, 1250, 5000, 300, 750, 100);
+//468 is the max moutains you can have
+//2188 is the max forests you can have and 0 is the min
+//337 is the max waters you can have and 8 is the min

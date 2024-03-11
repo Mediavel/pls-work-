@@ -11,6 +11,7 @@ class Water {
       this.position = position;
       this.width = collisionSize;
       this.height = collisionSize;
+      this.type = "water";
    }
    draw() {
       ctx.fillStyle = "blue";
@@ -24,6 +25,7 @@ class Moutain {
       this.position = position;
       this.width = collisionSize;
       this.height = collisionSize;
+      this.type = "moutain";
    }
    draw() {
       ctx.fillStyle = "gray";
@@ -37,6 +39,7 @@ class Forest {
       this.position = position;
       this.width = collisionSize;
       this.height = collisionSize;
+      this.type = "forest";
    }
    draw() {
       ctx.fillStyle = "darkgreen";
@@ -50,6 +53,7 @@ class Plain {
       this.position = position;
       this.width = collisionSize;
       this.height = collisionSize;
+      this.type = "plain";
    }
    draw() {
       ctx.fillStyle = "green";
@@ -117,299 +121,42 @@ function placeCollisions() {
    //console.log(mapHitboxes);
 }
 //calculates rect collisions
-function rectangularCollision({ rectangle1, rectangle2 }) {
+function rectangularCollision({ rect1, rect2 }) {
    return (
-      rectangle1.positionx + rectangle1.width >= rectangle2.position.x &&
-      rectangle1.positionx <= rectangle2.position.x + rectangle2.width &&
-      rectangle1.positiony + rectangle1.height >= rectangle2.position.y &&
-      rectangle1.positiony <= rectangle2.position.y + rectangle2.height
+      rect1.positionx + rect1.width >= rect2.position.x &&
+      rect1.positionx <= rect2.position.x + rect2.width &&
+      rect1.positiony + rect1.height >= rect2.position.y &&
+      rect1.positiony <= rect2.position.y + rect2.height
    );
 }
 //runs calculations for hitboxes of every unit every game loop
 function handleHitBoxes() {
    //plains
-   for (let i = 0; i < side1.length; i++) {
-      for (let j = 0; j < plainsBoxes.length; j++) {
-         if (
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: plainsBoxes[j],
-            })
-         ) {
-            side1[i].speed = side1[i].baseSpeed;
-            side1[i].range = side1[i].baseRange;
-            side1[i].accuracy = side1[i].baseAccuracy;
-            side1[i].cover = side1[i].baseCover;
-            if (renderStats)
-               console.log(
-                  `Plain S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         }
+   for (let u = 0; u < side1.length; u++) {
+      for (let b = 0; b < plainsBoxes.length; b++) {
+         unitsOnTerrain(side1[u], plainsBoxes[b]);
+         if (unitsOnTerrain(side1[u], plainsBoxes[b])) break;
       }
    }
    //forests
-   for (let i = 0; i < side1.length; i++) {
-      for (let j = 0; j < forestBoxes.length; j++) {
-         if (
-            //if unit is colliding and unit is type "Infantry"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: forestBoxes[j],
-            }) &&
-            side1[i].unitType == "Infantry"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.5;
-            side1[i].range = side1[i].baseRange * 0.9;
-            side1[i].accuracy = side1[i].baseAccuracy + 10;
-            side1[i].cover = side1[i].baseCover + 20;
-            if (renderStats)
-               console.log(
-                  `Forest S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         } else if (
-            //if unit is colliding and unit is type Calvery
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: forestBoxes[j],
-            }) &&
-            side1[i].unitType == "Calvary"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.33;
-            side1[i].range = side1[i].baseRange * 0.75;
-            side1[i].accuracy = side1[i].baseAccuracy - 10;
-            side1[i].cover = side1[i].baseCover + 5;
-            if (renderStats)
-               console.log(
-                  `Forest S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-         } else if (
-            //if unit is colliding and unit is type Cannon
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: forestBoxes[j],
-            }) &&
-            side1[i].unitType == "Cannon"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.15;
-            side1[i].range = side1[i].baseRange * 0.5;
-            side1[i].accuracy = side1[i].baseAccuracy - 15;
-            side1[i].cover = side1[i].baseCover + 10;
-            if (renderStats)
-               console.log(
-                  `Forest S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         } else if (
-            //if unit is colliding and unit is type General
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: forestBoxes[j],
-            }) &&
-            side1[i].unitType == "General"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.6;
-            side1[i].range = side1[i].baseRange;
-            side1[i].accuracy = side1[i].baseAccuracy = 15;
-            side1[i].cover = side1[i].baseCover + 25;
-            if (renderStats)
-               console.log(
-                  `Forest S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         }
+   for (let u = 0; u < side1.length; u++) {
+      for (let b = 0; b < forestBoxes.length; b++) {
+         unitsOnTerrain(side1[u], forestBoxes[b]);
+         if (unitsOnTerrain(side1[u], forestBoxes[b])) break;
       }
    }
    //moutains
-   for (let i = 0; i < side1.length; i++) {
-      for (let j = 0; j < moutainBoxes.length; j++) {
-         if (
-            //if unit is colliding and unit is type "Infantry"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: moutainBoxes[j],
-            }) &&
-            side1[i].unitType == "Infantry"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.25;
-            side1[i].range = side1[i].baseRange * 1.5;
-            side1[i].accuracy = side1[i].baseAccuracy + 5;
-            side1[i].cover = side1[i].baseCover + 10;
-            if (renderStats)
-               console.log(
-                  `Moutain S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         } else if (
-            //if unit is colliding and unit is type "Calvary"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: moutainBoxes[j],
-            }) &&
-            side1[i].unitType == "Calvary"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.2;
-            side1[i].range = side1[i].baseRange * 1.5;
-            side1[i].accuracy = side1[i].baseAccuracy;
-            side1[i].cover = side1[i].baseCover - 5;
-            if (renderStats)
-               console.log(
-                  `Moutain S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         } else if (
-            //if unit is colliding and unit is type "Cannon"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: moutainBoxes[j],
-            }) &&
-            side1[i].unitType == "Cannon"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.15;
-            side1[i].range = side1[i].baseRange * 1.5;
-            side1[i].accuracy = side1[i].baseAccuracy + 5;
-            side1[i].cover = side1[i].baseCover + 5;
-            if (renderStats)
-               console.log(
-                  `Moutain S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         } else if (
-            //if unit is colliding and unit is type "General"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: moutainBoxes[j],
-            }) &&
-            side1[i].unitType == "General"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.35;
-            side1[i].range = side1[i].baseRange * 1.5;
-            side1[i].accuracy = side1[i].baseAccuracy + 10;
-            side1[i].cover = side1[i].baseCover + 15;
-            if (renderStats)
-               console.log(
-                  `Moutain S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         }
+   for (let u = 0; u < side1.length; u++) {
+      for (let b = 0; b < moutainBoxes.length; b++) {
+         unitsOnTerrain(side1[u], moutainBoxes[b]);
+         if (unitsOnTerrain(side1[u], moutainBoxes[b])) break;
       }
    }
    //water
-   for (let i = 0; i < side1.length; i++) {
-      for (let j = 0; j < waterBoxes.length; j++) {
-         if (
-            //if unit is colliding and unit is type "Infantry"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: waterBoxes[j],
-            }) &&
-            side1[i].unitType == "Infantry"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.15;
-            side1[i].range = side1[i].baseRange * 0.5;
-            side1[i].accuracy = side1[i].baseAccuracy - 15;
-            side1[i].cover = side1[i].baseCover - 15;
-            if (renderStats)
-               console.log(
-                  `Water S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         } else if (
-            //if unit is colliding and unit is type "Calvary"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: waterBoxes[j],
-            }) &&
-            side1[i].unitType == "Calvary"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.1;
-            side1[i].range = side1[i].baseRange;
-            side1[i].accuracy = side1[i].baseAccuracy;
-            side1[i].cover = side1[i].baseCover + 25;
-            if (renderStats)
-               console.log(
-                  `Water S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         } else if (
-            //if unit is colliding and unit is type "Cannon"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: waterBoxes[j],
-            }) &&
-            side1[i].unitType == "Cannon"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.075;
-            side1[i].range = side1[i].baseRange * 0.75;
-            side1[i].accuracy = side1[i].baseAccuracy - 15;
-            side1[i].cover = side1[i].baseCover - 10;
-            if (renderStats)
-               console.log(
-                  `Water S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         } else if (
-            //if unit is colliding and unit is type "General"
-            rectangularCollision({
-               rectangle1: side1[i],
-               rectangle2: waterBoxes[j],
-            }) &&
-            side1[i].unitType == "General"
-         ) {
-            side1[i].speed = side1[i].baseSpeed * 0.25;
-            side1[i].range = side1[i].baseRange * 0.9;
-            side1[i].accuracy = side1[i].baseAccuracy - 5;
-            side1[i].cover = side1[i].baseCover - 5;
-            if (renderStats)
-               console.log(
-                  `Water S${side1[i].speed} R${side1[i].range} A${side1[i].accuracy} C${side1[i].cover}`
-               );
-            break;
-         }
+   for (let u = 0; u < side1.length; u++) {
+      for (let b = 0; b < waterBoxes.length; b++) {
+         unitsOnTerrain(side1[u], waterBoxes[b]);
+         if (unitsOnTerrain(side1[u], waterBoxes[b])) break;
       }
    }
-}
-
-//old way of runing calculations for hitboxes of every unit every game loop
-function OldhandleHitboxes() {
-   waterBoxes.forEach((boundary) => {
-      if (renderHitBoxes) boundary.draw();
-      side1.forEach((unit) => {
-         if (
-            rectangularCollision({
-               rectangle1: unit,
-               rectangle2: boundary,
-            })
-         ) {
-            console.log("WATER");
-         }
-      });
-   });
-   forestBoxes.forEach((boundary) => {
-      if (renderHitBoxes) boundary.draw();
-      side1.forEach((unit) => {
-         if (
-            rectangularCollision({
-               rectangle1: unit,
-               rectangle2: boundary,
-            })
-         ) {
-            console.log("they are touching forests");
-         }
-      });
-   });
-   moutainBoxes.forEach((boundary) => {
-      if (renderHitBoxes) boundary.draw();
-      side1.forEach((unit) => {
-         if (
-            rectangularCollision({
-               rectangle1: unit,
-               rectangle2: boundary,
-            })
-         ) {
-            console.log("they are touching moutains");
-         }
-      });
-   });
 }

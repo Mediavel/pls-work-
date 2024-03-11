@@ -3,6 +3,8 @@ let gameMap = {
    id: "curectMap",
    values: [],
 };
+let foundSeeds = [];
+let displaySeedNumber = 0;
 //generats a random map using perlin noise based on a random seed
 //every time
 function generateRandomMap() {
@@ -119,7 +121,7 @@ function generateMapOfCustomSeed(seed) {
          }
       }
    }
-   console.log("Seed:", seed);
+   //console.log("Seed:", seed);
    //console.log(gameMap.values);
 }
 //this get is a handy funtion written by chat gpt
